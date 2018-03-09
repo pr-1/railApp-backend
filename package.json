@@ -1,0 +1,23 @@
+{
+  "name": "rail-app",
+  "version": "1.0.1",
+  "description": "Rail App Api",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.2.0",
+    "mongoose": "^5.0.9",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1"
+  },
+  "author": "Prince",
+  "license": "ISC"
+}
