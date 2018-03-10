@@ -16,8 +16,6 @@ const app = express();
 
 const users = require('./routes/users');
 
-// Port Number
-const port = 3000;
 
 // CORS Middleware
 app.use(cors());
@@ -42,6 +40,6 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-app.listen(port, () => {
-  console.log('Server started on port '+port);
+app.listen(process.env.port || 3000, () => {
+  console.log('Server started on * 3000');
 });
