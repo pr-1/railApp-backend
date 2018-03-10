@@ -38,7 +38,7 @@ app.use('/users', users);
 
 // Index Route
 app.get('/', (req, res) => {
-  res.send('Invalid Endpoint');
+  res.send('Display Frontend');
 });
 
 // Start Server
