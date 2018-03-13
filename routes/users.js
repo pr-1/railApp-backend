@@ -46,7 +46,7 @@ router.post('/register', (req, res, next) => {
 
         res.json({
           success: true,
-          token: `Token is ${token}`,
+          token: `${token}`,
           user: {
             id: user._id,
             name: user.name,
