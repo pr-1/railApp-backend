@@ -110,7 +110,7 @@ router.post('/register', (req, res, next) => {
 // router.get('/fetch-data/api-get', (req));
 
 
-router.get('/authenticate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+router.get('/validate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   res.json({valid: true});
 });
 
