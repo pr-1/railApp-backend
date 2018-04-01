@@ -5,7 +5,8 @@ const config = require('../config/database');
 // User Schema
 const UserSchema = mongoose.Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   email: {
     type: String,
@@ -14,7 +15,10 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  // profile_url: {
+  //   type: String
+  // }
 });
 const User = module.exports = mongoose.model('User', UserSchema);
 
@@ -41,3 +45,15 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
       callback(null, isMatch);
     });
 }
+// module.exports.changePassword = function(user, callback){
+//   bcrypt.genSalt(10, (err, salt) => {
+//     bcrypt.hash(user.password, salt, (err, hash) => {
+//       if(err) throw err;
+//       user.password = hash;
+//       user.save(callback);
+//     });
+//   });
+// }
+// module.exports.updateProfileUrl = function(user, callback) {
+//   user.save(callback);
+// }
