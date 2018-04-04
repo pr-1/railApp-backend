@@ -94,7 +94,7 @@ router.post('/login',(req, res, next)=>{
      });
 
 });
-router.post('/update-profile-url', (req, res, next)=> {
+router.post('/update-profile', (req, res, next)=> {
   const id = req.body.id;
   const name = req.body.name;
   const profile_url = req.body.profile_url;
