@@ -16,9 +16,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  // profile_url: {
-  //   type: String
-  // }
+  profile_url: {
+    type: String,
+    default: ''
+  }
 });
 const User = module.exports = mongoose.model('User', UserSchema);
 
@@ -45,15 +46,3 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
       callback(null, isMatch);
     });
 }
-// module.exports.changePassword = function(user, callback){
-//   bcrypt.genSalt(10, (err, salt) => {
-//     bcrypt.hash(user.password, salt, (err, hash) => {
-//       if(err) throw err;
-//       user.password = hash;
-//       user.save(callback);
-//     });
-//   });
-// }
-// module.exports.updateProfileUrl = function(user, callback) {
-//   user.save(callback);
-// }
