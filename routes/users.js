@@ -96,10 +96,11 @@ router.post('/login',(req, res, next)=>{
 });
 router.post('/update-profile-url', (req, res, next)=> {
   const id = req.body.id;
+  const name = req.body.name;
   const profile_url = req.body.profile_url;
  User.getUserById(id, (err, user)=>{
    if (err) throw err;
-  
+     user.name = name;  
      user.profile_url = profile_url;
      user.save((err, user) => {
       if(err){
@@ -112,12 +113,12 @@ router.post('/update-profile-url', (req, res, next)=> {
  
 });
 
-router.post('/validate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+router.get('/validate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   res.json({success: true});
 });
 
 router.get('/get-profile', (req, res, next)=> {
-  const id = req.body.id;
+  const id = req.query.id;
   User.getUserById(id, (err, user)=> {
     if (err) throw err;
     if(user) {
