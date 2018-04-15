@@ -100,6 +100,9 @@ router.post('/update-profile', (req, res, next)=> {
   const profile_url = req.body.profile_url;
  User.getUserById(id, (err, user)=>{
    if (err) throw err;
+   if(!user) {
+     res.json({status: false, message: 'User id wrong'});
+   }
      user.name = name;  
      user.profile_url = profile_url;
      user.save((err, user) => {
