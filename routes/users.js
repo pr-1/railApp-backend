@@ -99,8 +99,10 @@ router.post('/update-profile', (req, res, next)=> {
   const name = req.body.name;
   const profile_url = req.body.profile_url;
  User.getUserById(id, (err, user)=>{
+   if (err) {
    if(!user) {
      res.json({status: false, message: 'User id wrong'});
+   }
    } else {
     user.name = name;  
     user.profile_url = profile_url;
