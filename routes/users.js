@@ -102,16 +102,18 @@ router.post('/update-profile', (req, res, next)=> {
    if (err) throw err;
    if(!user) {
      res.json({status: false, message: 'User id wrong'});
+   } else {
+    user.name = name;  
+    user.profile_url = profile_url;
+    user.save((err, user) => {
+     if(err){
+       res.json({success: false, message:'Failed to update profile url'});
+     } else {
+       res.json({success: true, message:'profile url updated'});
+     }
+   });
    }
-     user.name = name;  
-     user.profile_url = profile_url;
-     user.save((err, user) => {
-      if(err){
-        res.json({success: false, message:'Failed to update profile url'});
-      } else {
-        res.json({success: true, message:'profile url updated'});
-      }
-    });
+    
  });
  
 });
