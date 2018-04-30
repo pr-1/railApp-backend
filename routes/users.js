@@ -136,34 +136,4 @@ router.get('/get-profile', (req, res, next)=> {
     }
   });
 });
-// router.post('/validate', verifyToken , (req, res, next) => {
-//   jwt.verify(req.token, 'secretkey', (err, userData)=>{
-//     if (err) {
-//       res.json({success: false});
-//     } else {
-//       res.json({success: true, user : userData});
-//     }
-//   })
-// });
-
-// function verifyToken(req, res, next) {
-//   // Get auth header value
-//   const bearerHeader = req.body.token;
-//   console.log(bearerHeader);
-//   // Check if bearer is undefined
-//   if(typeof bearerHeader !== 'undefined') {
-//     // Split at the space
-//     const bearer = bearerHeader.split(' ');
-//     // Get token from array
-//     const bearerToken = bearer[1];
-//     // Set the token
-//     req.token = bearerToken;
-//     // Next middleware
-//     next();
-//   } else {
-//     // Forbidden
-//     res.sendStatus(403);
-//   }
-
-// }
-  module.exports = router;
+module.exports = router;
