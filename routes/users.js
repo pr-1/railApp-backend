@@ -5,7 +5,9 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
-
+const async = require('async');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 router.post('/register', (req, res, next) => {
     let newUser = new User({
       name: req.body.name,
@@ -110,7 +112,7 @@ router.post('/update-profile', (req, res, next)=> {
      if(err){
        res.json({success: false, message:'Failed to update profile url'});
      } else {
-       res.json({success: true, message:'profile url updated'});
+       res.json({success: true, message:'Profile url updated'});
      }
    });
    }
@@ -136,4 +138,65 @@ router.get('/get-profile', (req, res, next)=> {
     }
   });
 });
+
+
+router.post('/forgot', function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(5, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+         return res.json({success: false, message: 'Email Does Not Exist'});
+        }
+
+        user.password = token;
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(user.password, salt, (err, hash) => {
+            if(err) throw err;
+            user.password = hash;
+            user.save((err, user) => {
+              if(err) throw err;
+              done(err, token, user);
+            });
+          });
+        });
+      });
+    },
+    function(token, user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail', 
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.GMAIL_PASSWORD
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: process.env.EMAIL,
+        subject: 'Rail-App Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your Rail-App account.\n\n' +
+          'Please use the following password to login to your account :-\n\n' + token + '\n\n' 
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        if (err) {
+          res.json({success: false, message: 'failed due to internal error'});
+        } else {
+        res.json({success: true, message: 'An e-mail has been sent to ' + user.email + ' with a new password.'});
+        }
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) {
+    console.log(err);
+    }
+    
+  });
+});
+
 module.exports = router;

@@ -8,6 +8,7 @@
     "start": "node app"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
@@ -15,9 +16,13 @@
     "express": "^4.16.2",
     "jsonwebtoken": "^8.2.0",
     "mongoose": "^5.0.9",
+    "nodemailer": "^4.6.4",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1"
   },
   "author": "Prince",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^5.0.1"
+  }
 }
