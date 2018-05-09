@@ -199,4 +199,34 @@ router.post('/forgot', function(req, res, next) {
   });
 });
 
+router.post('/bug', (req, res, next)=> {
+  const email = req.body.email;
+  const message = req.body.message;
+  User.findOne({email: email}, (err, user)=> {
+    if(!user) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    } else {
+      let smtpTransport = nodemailer.createTransport({
+        service: 'Gmail', 
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.GMAIL_PASSWORD
+        }
+      });
+      let mailOptions = {
+        to: process.env.EMAIL,
+        from: process.env.EMAIL,
+        subject: 'Rail-App Bug',
+        text: 'The User ' + user.name + ' with email '+ email + ' has reported the following bug:-\n ' + message + '\n'
+      };
+      smtpTransport.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.json({success: false, message: 'Failed to report bug'});
+        } else {
+        res.json({success: true, message: 'Your Bug has been reported'});
+        }
+      });
+    }
+  });
+});
 module.exports = router;
