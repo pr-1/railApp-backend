@@ -28,8 +28,7 @@ router.post('/register', (req, res, next) => {
       });
     });
    
-  });
-
+});
 router.post('/login',(req, res, next)=>{
   const email = req.body.email;
   const password = req.body.password;
@@ -62,13 +61,12 @@ router.post('/login',(req, res, next)=>{
       }
     });
   });
-  });
-  router.post('/change-password',(req, res, next)=>{
+});
+router.post('/change-password',(req, res, next)=>{
     const id = req.body.id;
     const oldPassword = req.body.oldPassword;
     const newPassword = req.body.newPassword;
-     
-    User.getUserById(id, (err, user)=>{
+     User.getUserById(id, (err, user)=>{
       if(err) throw err;
       if(user) {
         User.comparePassword(oldPassword, user.password, (err, isMatch)=> {
@@ -92,19 +90,17 @@ router.post('/login',(req, res, next)=>{
             return res.json({success: false, message: "Old Password Wrong"});
           }
          });
-    }
+      }
      });
-
 });
 router.post('/update-profile', (req, res, next)=> {
   const id = req.body.id;
   const name = req.body.name;
   const profile_url = req.body.profile_url;
- User.getUserById(id, (err, user)=>{
-   if (err) {
+  User.getUserById(id, (err, user)=>{
+   if (err) throw err;
    if(!user) {
      res.json({status: false, message: 'User id wrong'});
-   }
    } else {
     user.name = name;  
     user.profile_url = profile_url;
@@ -117,14 +113,12 @@ router.post('/update-profile', (req, res, next)=> {
    });
    }
     
- });
+  });
  
 });
-
 router.get('/validate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-  res.json({success: true});
+  return res.json({success: true});
 });
-
 router.get('/get-profile', (req, res, next)=> {
   const id = req.query.id;
   User.getUserById(id, (err, user)=> {
@@ -138,18 +132,16 @@ router.get('/get-profile', (req, res, next)=> {
     }
   });
 });
-
-
 router.post('/forgot', function(req, res, next) {
   async.waterfall([
     function(done) {
       crypto.randomBytes(5, function(err, buf) {
-        var token = buf.toString('hex');
+        let token = buf.toString('hex');
         done(err, token);
       });
     },
     function(token, done) {
-      User.findOne({ email: req.body.email }, function(err, user) {
+      User.getUserByEmail(email, function(err, user) {
         if (!user) {
          return res.json({success: false, message: 'Email Does Not Exist'});
         }
@@ -168,14 +160,14 @@ router.post('/forgot', function(req, res, next) {
       });
     },
     function(token, user, done) {
-      var smtpTransport = nodemailer.createTransport({
+      let smtpTransport = nodemailer.createTransport({
         service: 'Gmail', 
         auth: {
           user: process.env.EMAIL,
           pass: process.env.GMAIL_PASSWORD
         }
       });
-      var mailOptions = {
+      let mailOptions = {
         to: user.email,
         from: process.env.EMAIL,
         subject: 'Rail-App Password Reset',
@@ -192,17 +184,13 @@ router.post('/forgot', function(req, res, next) {
       });
     }
   ], function(err) {
-    if (err) {
-    console.log(err);
-    }
-    
+    if (err) throw err;    
   });
 });
-
-router.post('/bug', (req, res, next)=> {
+router.post('/bug', (req, res, next) => {
   const email = req.body.email;
   const message = req.body.message;
-  User.findOne({email: email}, (err, user)=> {
+  User.getUserByEmail(email, (err, user)=> {
     if(!user) {
       return res.status(404).json({success: false, message: 'User not found'});
     } else {
@@ -226,6 +214,51 @@ router.post('/bug', (req, res, next)=> {
         res.json({success: true, message: 'Your Bug has been reported'});
         }
       });
+    }
+  });
+});
+router.post('/pnr-search', (req, res, next) => {
+  const id = req.body.id;
+  const pnrSearched = req.body.pnrSearched;
+  User.getUserById(id, (err, user) => {
+    if (!user) {
+      return res.json({status: false, message: 'User Not Found'});
+    } else {
+      user.pnrSearched.push(pnrSearched);
+      user.save((err, user) => {
+        if(err){
+          res.json({success: false, message:'Failed to update pnr array'});
+        } else {
+          res.json({success: true, message:'Pnr array updated'});
+        }
+       });
+    }
+  });
+});
+router.get('/pnr-search', (req, res, next) => {
+  const id = req.query.id;
+  User.getUserById(id, (err, user) => {
+    if(!user) {
+      return res.json({status: false, message: 'User Not Found'}); 
+    } else {
+      return res.json({status: true, pnrSearched: user.pnrSearched});
+    }
+  });
+});
+router.delete('/clear-history', (req, res, next) => {
+  const id = req.query.id;
+  User.getUserById(id, (err, user) => {
+    if(!user) {
+      return res.json({status: false, message: 'User Not Found'}); 
+    } else {
+      user.pnrSearched = [];
+      user.save((err, user) => {
+        if(err){
+          res.json({success: false, message:'Failed to clear Pnr history'});
+        } else {
+          res.json({success: true, message:'Pnr history cleared'});
+        }
+       });
     }
   });
 });

@@ -20,6 +20,9 @@ const UserSchema = mongoose.Schema({
   profile_url: {
     type: String,
     default: ''
+  },
+  pnrSearched: {
+    type: [],
   }
 });
 const User = module.exports = mongoose.model('User', UserSchema);
