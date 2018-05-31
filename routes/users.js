@@ -8,7 +8,7 @@ const User = require('../models/user');
 const async = require('async');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-router.post('/register', (req, res, next) => {
+router.post('/register', (req, res) => {
     let newUser = new User({
       name: req.body.name,
       email: req.body.email,
@@ -29,7 +29,7 @@ router.post('/register', (req, res, next) => {
     });
    
 });
-router.post('/login',(req, res, next)=>{
+router.post('/login',(req, res)=>{
   const email = req.body.email;
   const password = req.body.password;
 
@@ -62,7 +62,7 @@ router.post('/login',(req, res, next)=>{
     });
   });
 });
-router.post('/change-password',(req, res, next)=>{
+router.post('/change-password',(req, res)=>{
     const id = req.body.id;
     const oldPassword = req.body.oldPassword;
     const newPassword = req.body.newPassword;
@@ -93,7 +93,7 @@ router.post('/change-password',(req, res, next)=>{
       }
      });
 });
-router.post('/update-profile', (req, res, next)=> {
+router.post('/update-profile', (req, res)=> {
   const id = req.body.id;
   const name = req.body.name;
   const profile_url = req.body.profile_url;
@@ -116,10 +116,10 @@ router.post('/update-profile', (req, res, next)=> {
   });
  
 });
-router.get('/validate', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+router.get('/validate', passport.authenticate('jwt', {session:false}), (req, res) => {
   return res.json({success: true});
 });
-router.get('/get-profile', (req, res, next)=> {
+router.get('/get-profile', (req, res)=> {
   const id = req.query.id;
   User.getUserById(id, (err, user)=> {
     if (err) throw err;
@@ -132,7 +132,7 @@ router.get('/get-profile', (req, res, next)=> {
     }
   });
 });
-router.post('/forgot', function(req, res, next) {
+router.post('/forgot', function(req, res) {
   async.waterfall([
     function(done) {
       crypto.randomBytes(5, function(err, buf) {
@@ -187,7 +187,7 @@ router.post('/forgot', function(req, res, next) {
     if (err) throw err;    
   });
 });
-router.post('/bug', (req, res, next) => {
+router.post('/bug', (req, res) => {
   const email = req.body.email;
   const message = req.body.message;
   User.getUserByEmail(email, (err, user)=> {
@@ -217,7 +217,7 @@ router.post('/bug', (req, res, next) => {
     }
   });
 });
-router.post('/pnr-search', (req, res, next) => {
+router.post('/pnr-search', (req, res) => {
   const id = req.body.id;
   const pnrSearched = req.body.pnrSearched;
   User.getUserById(id, (err, user) => {
@@ -235,7 +235,7 @@ router.post('/pnr-search', (req, res, next) => {
     }
   });
 });
-router.get('/pnr-search', (req, res, next) => {
+router.get('/pnr-search', (req, res) => {
   const id = req.query.id;
   User.getUserById(id, (err, user) => {
     if(!user) {
@@ -245,7 +245,7 @@ router.get('/pnr-search', (req, res, next) => {
     }
   });
 });
-router.delete('/clear-history', (req, res, next) => {
+router.delete('/clear-history', (req, res) => {
   const id = req.query.id;
   User.getUserById(id, (err, user) => {
     if(!user) {
