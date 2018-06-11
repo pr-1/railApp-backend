@@ -43,7 +43,7 @@ router.post('/login',(req, res)=>{
       if(err) throw err;
       if(isMatch){
         const token = jwt.sign({data: user}, config.secret, {
-          expiresIn: 172800 //2 Days
+          expiresIn: 172800*15 //2 Days
         });
 
         res.json({
