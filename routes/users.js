@@ -100,7 +100,7 @@ router.post('/update-profile', (req, res)=> {
   User.getUserById(id, (err, user)=>{
    if (err) throw err;
    if(!user) {
-     res.json({status: false, message: 'User id wrong'});
+     res.json({success: false, message: 'User id wrong'});
    } else {
     user.name = name;  
     user.profile_url = profile_url;
@@ -222,7 +222,7 @@ router.post('/pnr-search', (req, res) => {
   const pnrSearched = req.body.pnrSearched;
   User.getUserById(id, (err, user) => {
     if (!user) {
-      return res.json({status: false, message: 'User Not Found'});
+      return res.json({success: false, message: 'User Not Found'});
     } else {
       user.pnrSearched.push(pnrSearched);
       user.save((err, user) => {
@@ -239,9 +239,9 @@ router.get('/pnr-search', (req, res) => {
   const id = req.query.id;
   User.getUserById(id, (err, user) => {
     if(!user) {
-      return res.json({status: false, message: 'User Not Found'}); 
+      return res.json({success: false, message: 'User Not Found'}); 
     } else {
-      return res.json({status: true, pnrSearched: user.pnrSearched});
+      return res.json({success: true, pnrSearched: user.pnrSearched});
     }
   });
 });
@@ -249,7 +249,7 @@ router.delete('/clear-history', (req, res) => {
   const id = req.query.id;
   User.getUserById(id, (err, user) => {
     if(!user) {
-      return res.json({status: false, message: 'User Not Found'}); 
+      return res.json({success: false, message: 'User Not Found'}); 
     } else {
       user.pnrSearched = [];
       user.save((err, user) => {
