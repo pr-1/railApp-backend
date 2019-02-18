@@ -1,8 +1,9 @@
-module.exports = {
-    database: 'mongodb://Prince:123@ds263408.mlab.com:63408/rail-app',
+// module.exports = {
+  // Removing my database information as it contains password to my database on mlabs.com
+    database: 'LINK TO YOUR ONLINE DATABASE',
+    // secret: 'yoursecret'
+  // }
+  module.exports = {
+    database: 'mongodb://localhost:27017/rail-app',
     secret: 'yoursecret'
   }
-  // module.exports = {
-  //   database: 'mongodb://localhost:27017/rail-app',
-  //   secret: 'yoursecret'
-  // }
